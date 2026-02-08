@@ -546,6 +546,7 @@ class BlackjackGame {
         this.isPlaying = false;
         this.clickCount = 0;
         this.clickTimer = null;
+        this.timers = [];
         
         // DOM Elements
         this.modal = document.getElementById('gameModal');
@@ -598,21 +599,27 @@ class BlackjackGame {
     }
 
     open() {
+        this.clearTimers();
         this.modal.classList.add('active');
         this.modal.setAttribute('aria-hidden', 'false');
         document.body.classList.add('modal-open');
-        if (!this.playerHand.length) {
-            this.startGame();
-        }
+        this.startGame();
     }
 
     close() {
+        this.clearTimers();
         this.modal.classList.remove('active');
         this.modal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('modal-open');
     }
 
+    clearTimers() {
+        this.timers.forEach(t => clearTimeout(t));
+        this.timers = [];
+    }
+
     startGame() {
+        this.clearTimers();
         // Reset state
         this.createDeck();
         this.playerHand = [];
@@ -762,7 +769,7 @@ class BlackjackGame {
         this.opponentScoreDisplay.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
 
         // Reveal opponent after delay
-        setTimeout(() => {
+        const t1 = setTimeout(() => {
             // Prepare for fade-in
             this.opponentScoreDisplay.style.opacity = '0';
             this.opponentScoreDisplay.textContent = this.opponentScore;
@@ -773,7 +780,7 @@ class BlackjackGame {
             });
             
             // Show result after another delay
-            setTimeout(() => {
+            const t2 = setTimeout(() => {
                 if (this.opponentScore > 21) {
                     this.endGame('Opponent Bust! You Win!');
                 } else if (this.playerScore > this.opponentScore) {
@@ -784,7 +791,9 @@ class BlackjackGame {
                     this.endGame('Push (Tie).');
                 }
             }, 600);
+            this.timers.push(t2);
         }, 1000); // 1 second intrigue delay
+        this.timers.push(t1);
     }
 
     endGame(message) {
