@@ -701,6 +701,7 @@ body.modal-open {
     border-radius: 0.75rem;
     padding: 0.6rem 0.85rem;
     backdrop-filter: blur(6px);
+    transition: opacity 0.3s ease;
 }
 
 .pet-project-meta h3 {
@@ -755,6 +756,10 @@ body.modal-open {
     .pet-project-card:hover .pet-project-actions {
         opacity: 1;
         transform: translateY(0);
+    }
+
+    .pet-project-card:hover .pet-project-meta {
+        opacity: 0;
     }
 }
 
