@@ -844,6 +844,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     initVariantImages();
     initVariantToggles();
+    initPetProjectCards();
     
     // Handle "My Offers" button click
     const myOffersBtn = document.getElementById('myOffersBtn');
@@ -953,7 +954,13 @@ function initCustomCursor() {
 
     const isClickable = (el) => {
         if (!el) return false;
-        return !!el.closest('a, button, .variant, .contact-item, .nav-link');
+        const clickableEl = el.closest('a, button, .variant, .pet-project-card, .pet-project-action, .contact-item, .nav-link');
+        if (!clickableEl) return false;
+        // Exclude coming-soon pet project cards from cursor effects
+        if (clickableEl.classList.contains('coming-soon') && clickableEl.classList.contains('pet-project-card')) {
+            return false;
+        }
+        return true;
     };
 
     window.addEventListener('mouseover', (e) => {
@@ -1006,5 +1013,48 @@ function initVariantToggles() {
             if (e.key !== 'Enter' && e.key !== ' ') return;
             toggle(e);
         });
+    });
+}
+
+function initPetProjectCards() {
+    const cards = document.querySelectorAll('.pet-project-card');
+    if (!cards.length) return;
+
+    const isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+    if (!isTouch) return;
+
+    const closeAll = (except) => {
+        cards.forEach(card => {
+            if (card !== except) {
+                card.classList.remove('is-open');
+            }
+        });
+    };
+
+    cards.forEach(card => {
+        // Skip coming-soon cards
+        if (card.classList.contains('coming-soon')) return;
+
+        card.addEventListener('click', (e) => {
+            const action = e.target.closest('.pet-project-action');
+            if (action) return;
+
+            e.preventDefault();
+            closeAll(card);
+            card.classList.toggle('is-open');
+        });
+
+        card.addEventListener('keydown', (e) => {
+            if (e.key !== 'Enter' && e.key !== ' ') return;
+            e.preventDefault();
+            closeAll(card);
+            card.classList.toggle('is-open');
+        });
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.pet-project-card')) {
+            closeAll();
+        }
     });
 }
