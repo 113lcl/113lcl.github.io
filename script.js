@@ -244,15 +244,17 @@ class ContactModal {
     }
 
     setupEventListeners() {
-        if (this.navContactBtn) {
-            this.navContactBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.open();
-            });
-        }
-        if (this.floatingBtn) {
-            this.floatingBtn.addEventListener('click', () => this.open());
-        }
+        // Handle all contact buttons (nav + hero + floating)
+        const contactTriggers = document.querySelectorAll('#navContactBtn, #heroContactBtn, #floatingContactBtn');
+        contactTriggers.forEach(btn => {
+            if (btn) {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.open();
+                });
+            }
+        });
+
         this.closeBtn.addEventListener('click', () => this.close());
         this.overlay.addEventListener('click', () => this.close());
         
@@ -428,10 +430,25 @@ class Navigation {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
                     const targetId = link.getAttribute('href');
+
+                    // If it's the home link, scroll to the absolute top
+                    if (targetId === '#home') {
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                        return;
+                    }
+
                     const targetSection = document.querySelector(targetId);
                     
                     if (targetSection) {
-                        const offsetTop = targetSection.offsetTop - 80;
+                        // On mobile, scroll further down (smaller offset) to show more content
+                        const isMobile = window.innerWidth <= 768;
+                        // Negative offset on mobile pushes the scroll position further down past the anchor
+                        const offset = isMobile ? -40 : 80;
+                        const offsetTop = targetSection.offsetTop - offset;
+                        
                         window.scrollTo({
                             top: offsetTop,
                             behavior: 'smooth'

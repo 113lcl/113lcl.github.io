@@ -1,4 +1,4 @@
-* {
+﻿* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -7,26 +7,39 @@
 :root {
     --bg-dark: #0a0a0f;
     --bg-secondary: #121218;
-    --accent-primary: #b99a52;
-    --accent-secondary: #8e7a4a;
+    /* Р‘РѕР»РµРµ РЅР°СЃС‹С‰РµРЅРЅС‹Р№, "СЌР»РµРєС‚СЂРёС‡РµСЃРєРёР№" Р·РѕР»РѕС‚РѕР№ РІРјРµСЃС‚Рѕ РїС‹Р»СЊРЅРѕРіРѕ */
+    --accent-primary: #ffc857; 
+    --accent-secondary: #dbac45;
     --accent-olive: #a68b4c;
-    --text-primary: #e5e7eb;
+    --text-primary: #f3f4f6;
     --text-secondary: #9ca3af;
     --text-muted: #6b7280;
 }
 
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 60px; /* Offset for sticky header */
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    /* РЁСЂРёС„С‚ Outfit РґР»СЏ РѕСЃРЅРѕРІРЅРѕРіРѕ С‚РµРєСЃС‚Р° - СЃРѕРІСЂРµРјРµРЅРЅС‹Р№, РіРµРѕРјРµС‚СЂРёС‡РЅС‹Р№, РґСЂСѓР¶РµР»СЋР±РЅС‹Р№ */
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--bg-dark);
     color: var(--text-primary);
     line-height: 1.6;
     overflow-x: hidden;
     overflow-y: scroll;
     height: 100vh;
-    scroll-behavior: smooth;
+    /* scroll-behavior: smooth; - Moved to html to fix scroll-padding support */
     -webkit-overflow-scrolling: touch;
     user-select: none;
     -webkit-user-select: none;
+}
+
+/* Р—Р°РіРѕР»РѕРІРєРё - Space Grotesk (С‚РµС…РЅРѕ-СЃС‚РёР»СЊ, "РєРѕСЃРјРёС‡РµСЃРєРёР№") */
+h1, h2, h3, h4, h5, h6, .game-card {
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: -0.02em;
 }
 
 body.modal-open {
@@ -131,7 +144,7 @@ body.modal-open {
     image-rendering: crisp-edges;
 }
 
-/* Навигация */
+/* РќР°РІРёРіР°С†РёСЏ */
 .navbar {
     position: fixed;
     top: 0;
@@ -197,7 +210,7 @@ body.modal-open {
     color: var(--text-primary);
 }
 
-/* Контейнер */
+/* РљРѕРЅС‚РµР№РЅРµСЂ */
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -206,7 +219,7 @@ body.modal-open {
     z-index: 1;
 }
 
-/* Первый экран */
+/* РџРµСЂРІС‹Р№ СЌРєСЂР°РЅ */
 .hero {
     height: 100vh;
     min-height: 100vh;
@@ -354,23 +367,32 @@ body.modal-open {
     margin-top: 0.5rem;
 }
 
-/* Кнопки */
+/* РљРЅРѕРїРєРё */
 .btn-primary {
     background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-    color: white;
+    color: #000; /* Pure black becomes transparent with mix-blend-mode: lighten */
     border: none;
     padding: 1rem 2.5rem;
     font-size: 1.125rem;
     border-radius: 0.75rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-weight: 500;
+    font-weight: 700;
+    font-family: 'Space Grotesk', sans-serif;
+    /* text-transform: uppercase; - Removed to keep only first letters capitalized */
     box-shadow: 0 10px 40px rgba(139, 133, 99, 0.3);
+    mix-blend-mode: lighten; /* This creates the true "cutout" effect */
+}
+
+/* Р­С„С„РµРєС‚ "РІС‹СЂРµР·Р°РЅРЅРѕРіРѕ" С‚РµРєСЃС‚Р° РїСЂРё РЅР°РІРµРґРµРЅРёРё РєСѓСЂСЃРѕСЂР° */
+.btn-primary:active {
+    box-shadow: 0 5px 20px rgba(139, 133, 99, 0.2);
+    transform: translateY(0);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 15px 50px rgba(139, 133, 99, 0.5);
+    box-shadow: 0 15px 50px rgba(139, 133, 99, 0.5); /* Restore hover shadow */
 }
 
 /* Scroll Indicator */
@@ -474,7 +496,7 @@ body.modal-open {
     height: 24px;
 }
 
-/* Портфолио */
+/* РџРѕСЂС‚С„РѕР»РёРѕ */
 .portfolio {
     height: 100vh;
     margin: 0;
@@ -543,13 +565,17 @@ body.modal-open {
 
 .preview-placeholder svg {
     color: var(--accent-primary);
-    opacity: 0.6;
-    transition: all 0.4s ease;
+    opacity: 0.7;
+    stroke-width: 1.5;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: drop-shadow(0 0 2px rgba(255, 200, 87, 0.2));
 }
 
 .variant:hover .preview-placeholder svg {
     opacity: 1;
-    transform: scale(1.05);
+    stroke-width: 2;
+    transform: perspective(500px) rotateX(5deg) scale(1.05);
+    filter: drop-shadow(0 0 8px var(--accent-primary));
 }
 
 .variant-info {
@@ -582,12 +608,12 @@ body.modal-open {
     font-weight: 600;
 }
 
-/* Стили для карточек с примерами работ (второй ряд) */
+/* РЎС‚РёР»Рё РґР»СЏ РєР°СЂС‚РѕС‡РµРє СЃ РїСЂРёРјРµСЂР°РјРё СЂР°Р±РѕС‚ (РІС‚РѕСЂРѕР№ СЂСЏРґ) */
 .variant[data-image] {
     position: relative;
 }
 
-/* Фоновое изображение на всю карточку - показывается при hover */
+/* Р¤РѕРЅРѕРІРѕРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ РЅР° РІСЃСЋ РєР°СЂС‚РѕС‡РєСѓ - РїРѕРєР°Р·С‹РІР°РµС‚СЃСЏ РїСЂРё hover */
 .variant[data-image]::before {
     content: '';
     position: absolute;
@@ -627,14 +653,14 @@ body.modal-open {
     opacity: 1;
 }
 
-/* Preview для карточек с изображениями */
+/* Preview РґР»СЏ РєР°СЂС‚РѕС‡РµРє СЃ РёР·РѕР±СЂР°Р¶РµРЅРёСЏРјРё */
 .variant[data-image] .variant-preview {
     position: relative;
     z-index: 2;
     transition: opacity 0.5s ease;
 }
 
-/* Размытый фон в preview по умолчанию */
+/* Р Р°Р·РјС‹С‚С‹Р№ С„РѕРЅ РІ preview РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ */
 .variant[data-image] .variant-preview::before {
     content: '';
     position: absolute;
@@ -655,7 +681,7 @@ body.modal-open {
     opacity: 0;
 }
 
-/* SVG иконка */
+/* SVG РёРєРѕРЅРєР° */
 .variant[data-image] .preview-placeholder {
     position: relative;
     z-index: 3;
@@ -670,7 +696,7 @@ body.modal-open {
     transform: scale(0.95);
 }
 
-/* Текстовая часть */
+/* РўРµРєСЃС‚РѕРІР°СЏ С‡Р°СЃС‚СЊ */
 .variant[data-image] .variant-info {
     position: relative;
     z-index: 2;
@@ -714,7 +740,7 @@ body.modal-open {
     opacity: 1; 
 }
 
-/* Модальное окно */
+/* РњРѕРґР°Р»СЊРЅРѕРµ РѕРєРЅРѕ */
 .modal {
     position: fixed;
     top: 0;
@@ -845,7 +871,7 @@ body.modal-open {
     font-size: 1.125rem;
 }
 
-/* Анимации */
+/* РђРЅРёРјР°С†РёРё */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -877,7 +903,7 @@ body.modal-open {
     }
 }
 
-/* Включение scroll-snap только на десктопе */
+/* Р’РєР»СЋС‡РµРЅРёРµ scroll-snap С‚РѕР»СЊРєРѕ РЅР° РґРµСЃРєС‚РѕРїРµ */
 @media (min-width: 1440px) {
     body {
         scroll-snap-type: y mandatory;
@@ -918,7 +944,7 @@ body.modal-open {
     }
 }
 
-/* Адаптивность */
+/* РђРґР°РїС‚РёРІРЅРѕСЃС‚СЊ */
 @media (max-width: 1024px) {
     .portfolio {
         padding: 3rem 0;
@@ -1020,7 +1046,7 @@ body.modal-open {
     }
 }
 
-/* Touch оптимизация */
+/* Touch РѕРїС‚РёРјРёР·Р°С†РёСЏ */
 @media (hover: none) and (pointer: coarse) {
     .variant:hover {
         transform: none;
@@ -1039,8 +1065,8 @@ body.modal-open {
     }
 }
 
-/* ========== IPHONE ПОРТРЕТНЫЙ РЕЖИМ ========== */
-/* Маленькие iPhone (SE, 12/13 mini) */
+/* ========== IPHONE РџРћР РўР Р•РўРќР«Р™ Р Р•Р–РРњ ========== */
+/* РњР°Р»РµРЅСЊРєРёРµ iPhone (SE, 12/13 mini) */
 @media (max-width: 390px) and (orientation: portrait) {
     .navbar {
         padding: 0.4rem 0;
@@ -1183,7 +1209,7 @@ body.modal-open {
     }
 }
 
-/* Обычные iPhone (12/13/14/15 normal) */
+/* РћР±С‹С‡РЅС‹Рµ iPhone (12/13/14/15 normal) */
 @media (min-width: 391px) and (max-width: 430px) and (orientation: portrait) {
     .navbar {
         padding: 0.5rem 0;
@@ -1315,7 +1341,7 @@ body.modal-open {
     }
 }
 
-/* Большие iPhone (Max, Plus) */
+/* Р‘РѕР»СЊС€РёРµ iPhone (Max, Plus) */
 @media (min-width: 431px) and (max-width: 540px) and (orientation: portrait) {
     .navbar {
         padding: 0.55rem 0;
@@ -1429,7 +1455,7 @@ body.modal-open {
     }
 }
 
-/* ========== IPHONE ГОРИЗОНТАЛЬНЫЙ РЕЖИМ ========== */
+/* ========== IPHONE Р“РћР РР—РћРќРўРђР›Р¬РќР«Р™ Р Р•Р–РРњ ========== */
 @media (orientation: landscape) and (max-width: 540px) {
     .portfolio-row {
         gap: 0.75rem;
@@ -1516,7 +1542,7 @@ body.modal-open {
     }
 }
 
-/* ========== IPAD ПОРТРЕТНЫЙ РЕЖИМ ========== */
+/* ========== IPAD РџРћР РўР Р•РўРќР«Р™ Р Р•Р–РРњ ========== */
 @media (min-width: 600px) and (max-width: 900px) and (orientation: portrait) {
     .hero,
     .portfolio {
@@ -1674,7 +1700,7 @@ body.modal-open {
     }
 }
 
-/* ========== IPAD ГОРИЗОНТАЛЬНЫЙ РЕЖИМ (Landscape) ========== */
+/* ========== IPAD Р“РћР РР—РћРќРўРђР›Р¬РќР«Р™ Р Р•Р–РРњ (Landscape) ========== */
 @media (min-width: 900px) and (max-width: 1366px) and (orientation: landscape) {
     .hero,
     .portfolio {
@@ -1808,7 +1834,7 @@ body.modal-open {
     }
 }
 
-/* ========== ОЧЕНЬ БОЛЬШИЕ IPAD (12.9") ========== */
+/* ========== РћР§Р•РќР¬ Р‘РћР›Р¬РЁРР• IPAD (12.9") ========== */
 @media (min-width: 1024px) and (max-width: 1366px) and (orientation: portrait) {
     .hero,
     .portfolio {
@@ -2109,7 +2135,7 @@ body.modal-open {
     }
 }
 
-/* Оптимизация для очень маленьких экранов */
+/* РћРїС‚РёРјРёР·Р°С†РёСЏ РґР»СЏ РѕС‡РµРЅСЊ РјР°Р»РµРЅСЊРєРёС… СЌРєСЂР°РЅРѕРІ */
 @media (max-height: 600px) {
     .hero {
         min-height: auto;
@@ -2117,5 +2143,23 @@ body.modal-open {
 
     .hero-content {
         margin-top: 0;
+    }
+}
+
+/* Hero Navigation (Static) */
+.hero-nav-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 2rem 0;
+    display: flex;
+    justify-content: center;
+    z-index: 10;
+}
+
+@media (max-width: 480px) {
+    .hero-nav-container {
+        padding: 1.5rem 0;
     }
 }

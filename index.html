@@ -9,7 +9,13 @@
     <meta property="og:title" content="Tymofii Kyrychenko">
     <meta property="og:description" content="Modern, responsive websites and web applications with clean code and great UX.">
     <meta property="og:type" content="website">
-    <link rel="stylesheet" href="style.css?v=1.5">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css?v=2.8">
 </head>
 <body>
     <!-- Canvas for interactive background -->
@@ -38,6 +44,15 @@
     <main>
     <!-- Hero section -->
     <section class="hero" id="home" aria-label="Intro">
+        <!-- Static Navigation for Hero -->
+        <div class="hero-nav-container">
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">home</a></li>
+                <li><a href="#portfolio" class="nav-link">examples</a></li>
+                <li><a href="#contactModal" class="nav-link" id="heroContactBtn">contact</a></li>
+            </ul>
+        </div>
+
         <div class="container">
             <div class="hero-content">
                 <h2 class="hero-greeting">Hi, I'm</h2>
@@ -355,6 +370,6 @@
     </div>
     </main>
 
-    <script src="script.js?v=1.5"></script>
+    <script src="script.js?v=2.7"></script>
 </body>
 </html>
