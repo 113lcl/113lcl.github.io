@@ -861,6 +861,35 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.tech-tag').forEach(tag => {
         tag.addEventListener('click', () => {});
     });
+
+    // Initialize copy buttons for contact info
+    document.querySelectorAll('.copy-square-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const textToCopy = btn.getAttribute('data-copy');
+            if (!textToCopy) return;
+
+            // Copy to clipboard
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                // Visual feedback
+                btn.classList.add('copied');
+                
+                // Change icon temporarily
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>`;
+                
+                // Reset after 2 seconds
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = originalHTML;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        });
+    });
 });
 
 // Set background images for example cards

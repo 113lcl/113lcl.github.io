@@ -890,6 +890,58 @@ body.modal-open {
     font-size: 1.125rem;
 }
 
+.contact-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.contact-row .contact-item {
+    flex: 1;
+}
+
+.copy-square-btn {
+    flex-shrink: 0;
+    aspect-ratio: 1 / 1;
+    height: 100%;
+    min-height: 72px;
+    max-height: 100px;
+    padding: 0;
+    background: rgba(139, 133, 99, 0.08);
+    border-radius: 0.75rem;
+    color: var(--accent-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(139, 133, 99, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0;
+}
+
+.copy-square-btn:hover {
+    background: rgba(139, 133, 99, 0.15);
+    border-color: rgba(139, 133, 99, 0.35);
+    transform: translateX(5px);
+}
+
+.copy-square-btn:active {
+    transform: translateX(3px);
+}
+
+.copy-square-btn.copied {
+    background: rgba(76, 175, 80, 0.15);
+    border-color: rgba(76, 175, 80, 0.35);
+    color: #4caf50;
+}
+
+/* Hide copy buttons on mobile */
+@media (max-width: 768px) {
+    .copy-square-btn {
+        display: none;
+    }
+}
+
 /* РђРЅРёРјР°С†РёРё */
 @keyframes fadeInUp {
     from {
