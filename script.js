@@ -535,6 +535,271 @@ class Navigation {
 
 }
 
+
+// Blackjack Game Logic
+class BlackjackGame {
+    constructor() {
+        this.deck = [];
+        this.playerHand = [];
+        this.playerScore = 0;
+        this.opponentScore = 0;
+        this.isPlaying = false;
+        this.clickCount = 0;
+        this.clickTimer = null;
+        
+        // DOM Elements
+        this.modal = document.getElementById('gameModal');
+        this.triggerBtn = document.getElementById('cssTag'); // Easter egg trigger
+        this.btnClose = document.getElementById('closeGameModal');
+        this.btnHit = document.getElementById('btnHit');
+        this.btnStay = document.getElementById('btnStay');
+        this.btnRestart = document.getElementById('btnRestart');
+        this.playerArea = document.getElementById('playerHand');
+        this.scoreDisplay = document.getElementById('playerScore');
+        this.opponentScoreDisplay = document.getElementById('opponentScoreRaw');
+        this.statusDisplay = document.getElementById('gameStatus');
+        
+        this.overlay = this.modal.querySelector('.modal-overlay');
+        
+        this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+        if (this.triggerBtn) {
+            this.triggerBtn.style.cursor = 'pointer'; // Hint that it is clickable
+            this.triggerBtn.addEventListener('click', (e) => {
+                this.handleClick(e);
+            });
+            // Prevent text selection on rapid clicks
+            this.triggerBtn.addEventListener('mousedown', (e) => e.preventDefault());
+        }
+        
+        this.btnClose.addEventListener('click', () => this.close());
+        this.overlay.addEventListener('click', () => this.close());
+        
+        this.btnHit.addEventListener('click', () => this.hit());
+        this.btnStay.addEventListener('click', () => this.stay());
+        this.btnRestart.addEventListener('click', () => this.startGame());
+    }
+
+    handleClick(e) {
+        this.clickCount++;
+        
+        // Reset count if no clicks for 500ms
+        clearTimeout(this.clickTimer);
+        this.clickTimer = setTimeout(() => {
+            this.clickCount = 0;
+        }, 1000);
+
+        if (this.clickCount >= 5) {
+            this.clickCount = 0;
+            this.open();
+        }
+    }
+
+    open() {
+        this.modal.classList.add('active');
+        this.modal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('modal-open');
+        if (!this.playerHand.length) {
+            this.startGame();
+        }
+    }
+
+    close() {
+        this.modal.classList.remove('active');
+        this.modal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
+    }
+
+    startGame() {
+        // Reset state
+        this.createDeck();
+        this.playerHand = [];
+        this.isPlaying = true;
+        this.playerArea.innerHTML = '';
+        this.statusDisplay.textContent = 'Get 21 or beat the opponent!';
+        this.statusDisplay.style.color = 'var(--text-secondary)';
+        
+        // Buttons state
+        this.btnHit.disabled = false;
+        this.btnStay.disabled = false;
+        this.btnHit.classList.remove('hidden');
+        this.btnStay.classList.remove('hidden');
+        this.btnRestart.classList.add('hidden');
+        
+        // Reset Opponent logic: simulate draws
+        // Start with a base between 15 and 26.
+        // This gives a chance for higher bust, lower scores, and blackjack.
+        this.opponentScore = Math.floor(Math.random() * (26 - 15 + 1)) + 15;
+        
+        this.opponentScoreDisplay.textContent = '??';
+        this.opponentScoreDisplay.style.opacity = ''; // Reset opacity style
+        this.opponentScoreDisplay.classList.add('hidden');
+
+        // Deal initial cards with stagger
+        this.dealCard();
+        setTimeout(() => {
+            this.dealCard();
+        }, 200);
+    }
+
+    createDeck() {
+        const suits = ['♥', '♦', '♣', '♠'];
+        const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+        this.deck = [];
+        
+        for (let suit of suits) {
+            for (let value of values) {
+                this.deck.push({ suit, value });
+            }
+        }
+        
+        // Shuffle
+        for (let i = this.deck.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [this.deck[i], this.deck[j]] = [this.deck[j], this.deck[i]];
+        }
+    }
+
+    dealCard() {
+        if (this.deck.length === 0) return;
+        
+        const card = this.deck.pop();
+        this.playerHand.push(card);
+        this.renderCard(card);
+        this.updateScore();
+        
+        if (this.playerScore > 21) {
+            this.endGame('Bust! You went over 21.');
+        }
+    }
+
+    renderCard(card) {
+        const cardEl = document.createElement('div');
+        const isRed = card.suit === '♥' || card.suit === '♦';
+        cardEl.className = `game-card ${isRed ? 'red' : ''}`;
+        cardEl.setAttribute('data-value', card.value);
+        cardEl.innerHTML = `<span>${card.suit}</span>`;
+        
+        this.playerArea.appendChild(cardEl);
+        
+        // Find deck deck (source position)
+        const deckCard = this.modal.querySelector('.deck-area .game-card.back');
+        
+        if (deckCard && deckCard.offsetParent) { // Check if visible
+            const startRect = deckCard.getBoundingClientRect();
+            const endRect = cardEl.getBoundingClientRect();
+            
+            const deltaX = startRect.left - endRect.left;
+            const deltaY = startRect.top - endRect.top;
+            
+            // Start from deck
+            cardEl.style.transition = 'none';
+            cardEl.style.transform = `translate(${deltaX}px, ${deltaY}px) rotate(-45deg) scale(0.5)`;
+            cardEl.style.opacity = '0';
+            
+            // Force reflow
+            cardEl.offsetHeight; 
+            
+            // Animate to hand
+            requestAnimationFrame(() => {
+                // Opacity creates quickly (0.1s), move takes longer (0.5s)
+                cardEl.style.transition = 'transform 0.5s ease-out, opacity 0.1s linear';
+                cardEl.style.transform = 'translate(0, 0) rotate(0deg) scale(1)';
+                cardEl.style.opacity = '1';
+            });
+        } else {
+            // Fallback (mobile or deck hidden)
+            cardEl.style.opacity = '0';
+            cardEl.style.transform = 'translateY(20px)';
+            requestAnimationFrame(() => {
+                cardEl.style.transition = 'all 0.3s ease';
+                cardEl.style.opacity = '1';
+                cardEl.style.transform = 'translateY(0)';
+            });
+        }
+    }
+
+    updateScore() {
+        let score = 0;
+        let aces = 0;
+        
+        for (let card of this.playerHand) {
+            if (['J', 'Q', 'K'].includes(card.value)) {
+                score += 10;
+            } else if (card.value === 'A') {
+                aces += 1;
+                score += 11;
+            } else {
+                score += parseInt(card.value);
+            }
+        }
+        
+        while (score > 21 && aces > 0) {
+            score -= 10;
+            aces -= 1;
+        }
+        
+        this.playerScore = score;
+        this.scoreDisplay.textContent = score;
+    }
+
+    hit() {
+        if (!this.isPlaying) return;
+        this.dealCard();
+    }
+
+    stay() {
+        if (!this.isPlaying) return;
+        
+        // Disable buttons immediately
+        this.btnHit.disabled = true;
+        this.btnStay.disabled = true;
+
+        // Show loading dots
+        this.opponentScoreDisplay.classList.remove('hidden');
+        this.opponentScoreDisplay.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+
+        // Reveal opponent after delay
+        setTimeout(() => {
+            // Prepare for fade-in
+            this.opponentScoreDisplay.style.opacity = '0';
+            this.opponentScoreDisplay.textContent = this.opponentScore;
+            
+            // Trigger reflow & fade in
+            requestAnimationFrame(() => {
+                this.opponentScoreDisplay.style.opacity = '1';
+            });
+            
+            // Show result after another delay
+            setTimeout(() => {
+                if (this.opponentScore > 21) {
+                    this.endGame('Opponent Bust! You Win!');
+                } else if (this.playerScore > this.opponentScore) {
+                    this.endGame('You Win!');
+                } else if (this.playerScore < this.opponentScore) {
+                    this.endGame('You Lost.');
+                } else {
+                    this.endGame('Push (Tie).');
+                }
+            }, 600);
+        }, 1000); // 1 second intrigue delay
+    }
+
+    endGame(message) {
+        this.isPlaying = false;
+        this.statusDisplay.textContent = message;
+        this.statusDisplay.style.color = message.includes('Win') ? '#48bb78' : (message.includes('Lost') || message.includes('Bust') ? '#e53e3e' : '#ecc94b');
+        
+        this.btnHit.classList.add('hidden');
+        this.btnStay.classList.add('hidden');
+        this.btnRestart.classList.remove('hidden');
+        this.btnHit.disabled = true;
+        this.btnStay.disabled = true;
+    }
+}
+
 // Init
 document.addEventListener('DOMContentLoaded', () => {
     const reduced = prefersReducedMotion();
@@ -547,6 +812,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     new Navigation();
     new PriceModal();
+    new BlackjackGame(); // Initialize Game
     if (!reduced) {
         initCustomCursor();
     }

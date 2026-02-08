@@ -1855,15 +1855,228 @@ body.modal-open {
     }
 }
 
-/* Оптимизация для экранов высокой четкости с выемкой (notch) */
-@supports (padding: max(0px)) {
-    body {
-        padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+/* Game Styles */
+.game-modal-content {
+    background: #1a1a24;
+    max-width: 500px;
+    width: 90%;
+    border: 1px solid rgba(139, 133, 99, 0.3);
+}
+
+.game-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.game-header h2 {
+    color: var(--accent-primary);
+    margin-bottom: 0.5rem;
+}
+
+.chip-count {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.game-area {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    grid-template-rows: auto auto;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    min-height: 200px;
+}
+
+.deck-area {
+    grid-row: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.deck-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.opponent-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
+}
+
+.opponent-text {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.opponent-score {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-top: 0.5rem;
+}
+
+.opponent-score.hidden {
+    filter: blur(8px);
+    opacity: 0.5;
+}
+
+/* Loading dots animation */
+.loading-dots {
+    display: inline-flex;
+    gap: 4px;
+}
+.loading-dots span {
+    width: 6px;
+    height: 6px;
+    background-color: var(--text-primary);
+    border-radius: 50%;
+    animation: bounce 0.5s infinite alternate;
+}
+.loading-dots span:nth-child(2) { animation-delay: 0.1s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.2s; }
+
+@keyframes bounce {
+    to { transform: translateY(-6px); opacity: 0.5; }
+}
+
+/* Score fade in */
+.opponent-score {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-top: 0.5rem;
+    transition: opacity 0.3s ease;
+}
+
+.player-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    min-height: 100px;
+}
+
+/* Card Styles */
+.game-card {
+    width: 70px;
+    height: 100px;
+    border-radius: 8px;
+    background: #fff;
+    color: #000;
+    position: relative;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+    user-select: none;
+    transition: transform 0.3s ease;
+}
+
+.game-card.red {
+    color: #e53e3e;
+}
+
+.game-card.back {
+    background: #2d3748;
+    background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 10px, transparent 10px, transparent 20px);
+    border: 2px solid #4a5568;
+}
+
+.game-card::before, .game-card::after {
+    content: attr(data-value);
+    position: absolute;
+    font-size: 0.8rem;
+}
+
+.game-card::before { top: 5px; left: 5px; }
+.game-card::after { bottom: 5px; right: 5px; transform: rotate(180deg); }
+
+.game-status {
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    min-height: 1.6em;
+    color: var(--text-secondary);
+}
+
+.game-controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn-game {
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.btn-game.hit {
+    background: var(--bg-dark);
+    border: 1px solid var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+.btn-game.hit:hover:not(:disabled) {
+    background: var(--accent-primary);
+    color: var(--bg-dark);
+}
+
+.btn-game.stay {
+    background: #e53e3e;
+    color: white;
+}
+
+.btn-game.stay:hover:not(:disabled) {
+    background: #c53030;
+}
+
+.btn-game.restart {
+    background: var(--text-primary);
+    color: var(--bg-dark);
+    width: 100%;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.btn-game:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+    .game-modal-content {
+        padding: 1.5rem;
+    }
+    
+    .game-area {
+        grid-template-columns: 1fr;
+        gap: 1rem;
     }
 
-    .floating-contact-btn {
-        bottom: calc(2rem + env(safe-area-inset-bottom));
-        right: calc(2rem + env(safe-area-inset-right));
+    .deck-area {
+        display: none; /* Hide deck on tiny screens to save space */
+    }
+
+    .game-card {
+        width: 60px;
+        height: 84px;
+        font-size: 1.2rem;
     }
 }
 
