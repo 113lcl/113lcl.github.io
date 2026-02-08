@@ -21,6 +21,16 @@ html {
     scroll-padding-top: 60px; /* Offset for sticky header */
 }
 
+/* Hide scrollbars on desktop without disabling scroll */
+html {
+    scrollbar-width: none; /* Firefox */
+}
+
+html::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
 body {
     /* РЁСЂРёС„С‚ Outfit РґР»СЏ РѕСЃРЅРѕРІРЅРѕРіРѕ С‚РµРєСЃС‚Р° - СЃРѕРІСЂРµРјРµРЅРЅС‹Р№, РіРµРѕРјРµС‚СЂРёС‡РЅС‹Р№, РґСЂСѓР¶РµР»СЋР±РЅС‹Р№ */
     font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -34,6 +44,16 @@ body {
     -webkit-overflow-scrolling: touch;
     user-select: none;
     -webkit-user-select: none;
+}
+
+/* Hide scrollbars on desktop without disabling scroll */
+body {
+    scrollbar-width: none; /* Firefox */
+}
+
+body::-webkit-scrollbar {
+    width: 0;
+    height: 0;
 }
 
 /* Р—Р°РіРѕР»РѕРІРєРё - Space Grotesk (С‚РµС…РЅРѕ-СЃС‚РёР»СЊ, "РєРѕСЃРјРёС‡РµСЃРєРёР№") */
@@ -249,7 +269,7 @@ body.modal-open {
 }
 
 .hero-greeting {
-    font-size: 1.25rem;
+    font-size: 1.4rem;
     color: var(--accent-primary);
     margin-bottom: 0.5rem;
     font-weight: 500;
@@ -284,7 +304,6 @@ body.modal-open {
     transition: all 0.3s ease;
     text-align: center;
     cursor: pointer;
-    user-select: none;
     position: relative;
 }
 
@@ -2152,7 +2171,7 @@ body.modal-open {
     top: 0;
     left: 0;
     width: 100%;
-    padding: 2rem 0;
+    padding: 1rem 0;
     display: flex;
     justify-content: center;
     z-index: 10;
@@ -2160,6 +2179,6 @@ body.modal-open {
 
 @media (max-width: 480px) {
     .hero-nav-container {
-        padding: 1.5rem 0;
+        padding: 0.8rem 0;
     }
 }
