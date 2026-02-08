@@ -270,11 +270,21 @@ body.modal-open {
     font-weight: 500;
     transition: all 0.3s ease;
     text-align: center;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
 }
 
 .tech-tag:hover {
     background: rgba(139, 133, 99, 0.25);
     border-color: var(--accent-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(139, 133, 99, 0.15);
+}
+
+.tech-tag:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(139, 133, 99, 0.1);
 }
 
 .hero-description {

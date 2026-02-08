@@ -839,6 +839,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Fix: Make tech tags interactive on IOS/Mobile for :active states
+    document.querySelectorAll('.tech-tag').forEach(tag => {
+        tag.addEventListener('click', () => {});
+    });
 });
 
 // Set background images for example cards
